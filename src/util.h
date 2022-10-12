@@ -1,8 +1,14 @@
-#ifndef UTIL_CPP
-#define UTIL_CPP
+#ifndef UTIL_H
+#define UTIL_H
 
-float calcula_fo();
+#include <iostream>
+#include <vector>
+using namespace std;
 
-void imprime_solucao();
+float *cria_vetor_float(int tam);
+
+float calcula_fo(int n, vector<int> &s, float *custo);
+
+void imprime_solucao(int n, vector<int> &s);
 
 #endif

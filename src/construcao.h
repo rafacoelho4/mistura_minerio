@@ -1,6 +1,4 @@
-#ifndef CONSTRUCAO_CPP
-#define CONSTRUCAO_CPP
-
-
+#ifndef CONSTRUCAO_H
+#define CONSTRUCAO_H
 
 #endif
