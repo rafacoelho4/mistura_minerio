@@ -50,12 +50,20 @@ int main()
     imprime_solucao(n, s);
     printf("Funcao objetivo = %f\n", fo);
 
+    // conentracoes dos elementos em cada pilha
     float **concentracoes;
+    // m pilhas, n elementos
     concentracoes = cria_matriz_float(m, n);
 
+    // quantidade de material disponível em cada pilha
     vector<int> qtd(m);
 
+    // lendo quatidades e concentrações
     le_arq_vetor_matriz((char *)"input/pilhas.txt", m, qtd, n, concentracoes);
+
+    vector<string> nomes;
+
+    le_arq_vetor_string((char *)"input/nomes.txt", nomes);
 
     return 1;
 }

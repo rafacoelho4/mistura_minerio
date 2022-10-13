@@ -52,3 +52,26 @@ void le_arq_vetor_matriz(char nomearq[], int m, vector<int> &vetor, int n, float
 
     fclose(arquivo);
 }
+
+void le_arq_vetor_string(char nomearq[], vector<string> &vetor)
+{
+    int i = 0;
+    FILE *arquivo;
+    char buf[100];
+
+    arquivo = fopen(nomearq, "r");
+    if (!arquivo)
+    {
+        cout << "O arquivo " << nomearq << "nao pode ser aberto";
+        getchar();
+        exit(1);
+    }
+    while (!feof(arquivo))
+    {
+        fscanf(arquivo, "%s\n", buf);
+        vetor.push_back(buf);
+
+        i++;
+    }
+    fclose(arquivo);
+}
