@@ -25,29 +25,37 @@
 
 int main()
 {
-    // n: quantidade de elementos analisados 
+    // n: quantidade de elementos analisados
     // m: quantidade de pilhas de minério
     int n = 5, m = 15;
     // c: vetor de custo
     // fo: valor da função objetiva (custo da solução)
-    float *c, fo;
+    float *custos, fo;
     // s: vetor solução
     vector<int> s;
 
     // criando vetor de custo
-    c = cria_vetor_float(m);
-    // lendo valores dos custos de cada pilha 
-    le_arq_vetor((char *)"input/custo.txt", c);
+    custos = cria_vetor_float(m);
+    // lendo valores dos custos de cada pilha
+    le_arq_vetor((char *)"input/custo.txt", custos);
 
-    // construção de solução inicial 
-    for (int i = 0; i < n; i++) s.push_back(i*10);
+    // construção de solução inicial
+    for (int i = 0; i < n; i++)
+        s.push_back(i * 10);
 
-    // calculando valor da solução atual 
-    fo = calcula_fo(n, s, c);
+    // calculando valor da solução atual
+    fo = calcula_fo(n, s, custos);
 
     printf("\nSolucao:\n");
     imprime_solucao(n, s);
     printf("Funcao objetivo = %f\n", fo);
+
+    float **concentracoes;
+    concentracoes = cria_matriz_float(m, n);
+
+    vector<int> qtd(m);
+
+    le_arq_vetor_matriz((char *)"input/pilhas.txt", m, qtd, n, concentracoes);
 
     return 1;
 }

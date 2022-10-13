@@ -22,3 +22,33 @@ void le_arq_vetor(char nomearq[], float *vetor)
     }
     fclose(arquivo);
 }
+
+void le_arq_vetor_matriz(char nomearq[], int m, vector<int> &vetor, int n, float **matriz)
+{
+    int i = 0, qtd;
+    float valor;
+    FILE *arquivo;
+
+    arquivo = fopen(nomearq, "r");
+    if (!arquivo)
+    {
+        cout << "O Arquivo " << nomearq << "nao pode ser aberto.\n";
+        getchar();
+        exit(1);
+    }
+
+    while (i < m)
+    {
+        fscanf(arquivo, "%d", &qtd);
+        vetor[i] = qtd;
+        for (int j = 0; j < n; j++)
+        {
+            fscanf(arquivo, "%f", &valor);
+            matriz[i][j] = valor;
+        }
+
+        i++;
+    }
+
+    fclose(arquivo);
+}

@@ -1,5 +1,18 @@
 #include "util.h"
 
+int *cria_vetor(int tam)
+{
+    int *vetor;
+
+    vetor = (int *)malloc(tam * sizeof(int));
+    if (!vetor)
+    {
+        cout << "Falta memoria para alocar o vetor de ponteiros";
+        exit(1);
+    }
+    return vetor;
+}
+
 /* cria memoria para um vetor de tam posicoes */
 float *cria_vetor_float(int tam)
 {
@@ -12,6 +25,29 @@ float *cria_vetor_float(int tam)
         exit(1);
     }
     return vetor;
+}
+
+float **cria_matriz_float(int nlinhas, int ncolunas)
+{
+    int i;
+    float **matriz;
+
+    matriz = (float **)malloc(nlinhas * sizeof(float *));
+    if (!matriz)
+    {
+        cout << "Falta memoria para alocar a matriz de ponteiros\n";
+        exit(1);
+    }
+    for (i = 0; i < nlinhas; i++)
+    {
+        matriz[i] = (float *)malloc(ncolunas * sizeof(float));
+        if (!matriz[i])
+        {
+            cout << "Falta memoria para alocar a matriz de ponteiros.\n";
+            exit(1);
+        }
+    }
+    return matriz;
 }
 
 void imprime_solucao(int n, vector<int> &s)
