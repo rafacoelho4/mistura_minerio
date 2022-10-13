@@ -59,7 +59,7 @@ void imprime_solucao(int n, vector<int> &s)
 void imprime_concentracoes(vector<float> resultado, vector<string> nomes)
 {
     for (int i = 0; i < resultado.size(); i++)
-        cout << nomes[i] << ": " << resultado[i] << "     ";
+        cout << nomes[i] << ": " << resultado[i] * 100 << "%    ";
 }
 
 float calcula_fo(int n, vector<int> &s, float *custo)

@@ -14,7 +14,7 @@
         validação da solução:
         concentração dos 5 elementos deve estar dentro dos limites
 
-        valor da função objetiva:
+        valor da função objetiva (custo):
         Si * Pi (quantidade retirada da pilha i vezes o preço do material dessa pilha)
         0 * p1 + 100 * p2 + 300 * p3 + 0 * p4 + 200 * p5
 */
@@ -62,14 +62,20 @@ int main()
     // lendo limites das concentracoes dos elementos no produto final
     le_arq_tres_vetores((char *)"input/limites.txt", n, limInf, meta, limSup);
 
+    // concentracoes dos elementos no produto final
+    vector<float> resultado;
+
+    // massa desejada pro produto final
+    int massa = 6000;
+    
     // construcao da solucao inicial
-    construcao_exemplo(n, s);
+    construcao_aleatoria(m, s, massa);
+    // construcao_exemplo(n, s);
 
     // calculando valor da solução atual
     fo = calcula_fo(m, s, custos);
 
-    // concentracoes dos elementos no produto final
-    vector<float> resultado;
+    // calcula a concentração de cada elemento no produto final 
     calcula_concentracoes(m, s, n, concentracoes, resultado);
 
     printf("\nSolucao:\n");

@@ -20,10 +20,42 @@ void construcao_exemplo(int n, vector<int> &s)
     s.push_back(1120);
 }
 
+void construcao_aleatoria(int n, vector<int> &s, int massa)
+{
+    // initial state with zero
+    for (int i = 0; i < n; i++)
+        s.push_back(0);
+
+    // seed value
+    srand((unsigned)time(0));
+
+    // values will vary between 500 and 2000 (if massa = 6000)
+    int random, offset = 500, range = massa / 5;
+
+    int sum = 0, resto, pos;
+    while (sum < massa)
+    {
+        // inserting at random position
+        pos = rand() % n;
+        // generating random quantity to take from pile
+        random = offset + (rand() % range);
+        if(s[pos] != 0) continue;
+        // se soma ultrapassa o máximo, pegar o resto até o desejado
+        if (sum + random > massa)
+        {
+            resto = massa - sum;
+            s[pos] = resto;
+            break;
+        }
+        s[pos] = random;
+        sum += random;
+    }
+}
+
 // m: nro de elementos
 void calcula_concentracoes(int pilhas, vector<int> &s, int m, float **concentracoes, vector<float> &resultado)
 {
-    // sum of mass of element in total 
+    // sum of mass of element in total
     vector<float> sumElementos(m);
 
     // sum of each element in all the piles start at 0
