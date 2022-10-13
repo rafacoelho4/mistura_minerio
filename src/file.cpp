@@ -75,3 +75,27 @@ void le_arq_vetor_string(char nomearq[], vector<string> &vetor)
     }
     fclose(arquivo);
 }
+
+void le_arq_tres_vetores(char nomearq[], int n, vector<float> &vetor1, vector<float> &vetor2, vector<float> &vetor3)
+{
+    int i = 0;
+    float valor1, valor2, valor3;
+    FILE *arquivo;
+
+    arquivo = fopen(nomearq, "r");
+    if (!arquivo)
+    {
+        cout << "O arquivo " << nomearq << "nao pode ser aberto";
+        getchar();
+        exit(1);
+    }
+    while (!feof(arquivo))
+    {
+        fscanf(arquivo, "%f %f %f\n", &valor1, &valor2, &valor3);
+        vetor1.push_back(valor1);
+        vetor2.push_back(valor2);
+        vetor3.push_back(valor3);
+        i++;
+    }
+    fclose(arquivo);
+}

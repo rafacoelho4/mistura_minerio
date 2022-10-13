@@ -61,9 +61,19 @@ int main()
     // lendo quatidades e concentrações
     le_arq_vetor_matriz((char *)"input/pilhas.txt", m, qtd, n, concentracoes);
 
+    // nomes dos elementos
     vector<string> nomes;
 
+    // lendo nomes do arquivo txt
     le_arq_vetor_string((char *)"input/nomes.txt", nomes);
+
+    // concentração ideal do elemento no produto final, limites aceitaveis inferior e superior
+    vector<float> meta;
+    vector<float> limInf;
+    vector<float> limSup;
+
+    // lendo limites das concentracoes dos elementos no produto final
+    le_arq_tres_vetores((char *)"input/limites.txt", n, limInf, meta, limSup);
 
     return 1;
 }
