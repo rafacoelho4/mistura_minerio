@@ -16,4 +16,6 @@ float calcula_fo(int n, vector<int> &s, float *custo);
 
 void imprime_solucao(int n, vector<int> &s);
 
+void imprime_concentracoes(vector<float> resultado, vector<string> nomes);
+
 #endif

@@ -56,6 +56,12 @@ void imprime_solucao(int n, vector<int> &s)
         cout << "Pilha " << i + 1 << ": " << s[i] << endl;
 }
 
+void imprime_concentracoes(vector<float> resultado, vector<string> nomes)
+{
+    for (int i = 0; i < resultado.size(); i++)
+        cout << nomes[i] << ": " << resultado[i] << "     ";
+}
+
 float calcula_fo(int n, vector<int> &s, float *custo)
 {
     float fo = 0;

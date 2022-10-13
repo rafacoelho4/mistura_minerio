@@ -2,6 +2,7 @@
 #include "busca_local.h"
 #include "util.h"
 #include "file.h"
+#include "construcao.h"
 
 /*
     SOLUÇÃO
@@ -39,17 +40,6 @@ int main()
     // lendo valores dos custos de cada pilha
     le_arq_vetor((char *)"input/custo.txt", custos);
 
-    // construção de solução inicial
-    for (int i = 0; i < n; i++)
-        s.push_back(i * 10);
-
-    // calculando valor da solução atual
-    fo = calcula_fo(n, s, custos);
-
-    printf("\nSolucao:\n");
-    imprime_solucao(n, s);
-    printf("Funcao objetivo = %f\n", fo);
-
     // conentracoes dos elementos em cada pilha
     float **concentracoes;
     // m pilhas, n elementos
@@ -57,13 +47,11 @@ int main()
 
     // quantidade de material disponível em cada pilha
     vector<int> qtd(m);
-
     // lendo quatidades e concentrações
     le_arq_vetor_matriz((char *)"input/pilhas.txt", m, qtd, n, concentracoes);
 
     // nomes dos elementos
     vector<string> nomes;
-
     // lendo nomes do arquivo txt
     le_arq_vetor_string((char *)"input/nomes.txt", nomes);
 
@@ -71,9 +59,23 @@ int main()
     vector<float> meta;
     vector<float> limInf;
     vector<float> limSup;
-
     // lendo limites das concentracoes dos elementos no produto final
     le_arq_tres_vetores((char *)"input/limites.txt", n, limInf, meta, limSup);
+
+    // construcao da solucao inicial
+    construcao_exemplo(n, s);
+
+    // calculando valor da solução atual
+    fo = calcula_fo(m, s, custos);
+
+    // concentracoes dos elementos no produto final
+    vector<float> resultado;
+    calcula_concentracoes(m, s, n, concentracoes, resultado);
+
+    printf("\nSolucao:\n");
+    imprime_solucao(m, s);
+    printf("Funcao objetivo = %f\n", fo);
+    imprime_concentracoes(resultado, nomes);
 
     return 1;
 }
