@@ -50,6 +50,16 @@ float **cria_matriz_float(int nlinhas, int ncolunas)
     return matriz;
 }
 
+void libera_vetor(int *vetor)
+{
+  free(vetor);
+}
+
+void libera_vetor(vector<int> *vetor)
+{
+  delete[] vetor;
+}
+
 void imprime_solucao(int n, vector<int> &s)
 {
     for (int i = 0; i < n && s[i] != -1; i++)

@@ -26,29 +26,30 @@
 
 int main()
 {
-    // n: quantidade de elementos analisados
-    // m: quantidade de pilhas de minério
-    int n = 5, m = 15;
-    // c: vetor de custo
+    // numero de elementos analisados e nro de pilhas disponiveis
+    int elementos = 5, pilhas = 15;
+    // custos: vetor que armazena valor para movimentar uma unidade da pilha i
     // fo: valor da função objetiva (custo da solução)
     float *custos, fo;
     // s: vetor solução
     vector<int> s;
+    // massa desejada pro produto final
+    int massa = 6000;
 
     // criando vetor de custo
-    custos = cria_vetor_float(m);
+    custos = cria_vetor_float(pilhas);
     // lendo valores dos custos de cada pilha
     le_arq_vetor((char *)"input/custo.txt", custos);
 
     // conentracoes dos elementos em cada pilha
     float **concentracoes;
-    // m pilhas, n elementos
-    concentracoes = cria_matriz_float(m, n);
+    // pilhas pilhas, elementos elementos
+    concentracoes = cria_matriz_float(pilhas, elementos);
 
     // quantidade de material disponível em cada pilha
-    vector<int> qtd(m);
+    vector<int> qtd(pilhas);
     // lendo quatidades e concentrações
-    le_arq_vetor_matriz((char *)"input/pilhas.txt", m, qtd, n, concentracoes);
+    le_arq_vetor_matriz((char *)"input/pilhas.txt", pilhas, qtd, elementos, concentracoes);
 
     // nomes dos elementos
     vector<string> nomes;
@@ -60,26 +61,54 @@ int main()
     vector<float> limInf;
     vector<float> limSup;
     // lendo limites das concentracoes dos elementos no produto final
-    le_arq_tres_vetores((char *)"input/limites.txt", n, limInf, meta, limSup);
+    le_arq_tres_vetores((char *)"input/limites.txt", elementos, limSup, meta, limInf);
 
     // concentracoes dos elementos no produto final
     vector<float> resultado;
 
-    // massa desejada pro produto final
-    int massa = 6000;
-    
-    // construcao da solucao inicial
-    construcao_aleatoria(m, s, massa);
-    // construcao_exemplo(n, s);
+    int valido, it = 0;
 
-    // calculando valor da solução atual
-    fo = calcula_fo(m, s, custos);
+    // seed for random numbers
+    srand((unsigned)time(0));
 
-    // calcula a concentração de cada elemento no produto final 
-    calcula_concentracoes(m, s, n, concentracoes, resultado);
+    // construção aleatória
+    // aleatoria(massa, pilhas, custos, s, elementos, concentracoes, resultado, limInf, limSup);
+
+    // // calculando valor da solução atual
+    // fo = calcula_fo(pilhas, s, custos);
+
+    do
+    {
+        cout << "iteracao: " << it << endl;
+
+        // clearing vectors (new solution (s) will be found and new concentration results too (resultado))
+        resultado.clear();
+        s.clear();
+
+        // construcao da solucao inicial
+        construcao_aleatoria(pilhas, s, massa);
+        // construcao_exemplo(pilhas, s);
+
+        // calculando valor da solução atual
+        fo = calcula_fo(pilhas, s, custos);
+
+        // calcula a concentração de cada elemento no produto final
+        calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
+
+        // checa se a solução possui valores aceitaveis de concentracoes
+        valido = solucao_valida(resultado, limInf, limSup);
+
+        // incrementing iteration variable
+        it++;
+    } while (valido == 0 && it < 400);
+
+    valido ? cout << "solucao encontrada!" : cout << "solucao nao encontrada...";
+
+    if (!valido)
+        return 1;
 
     printf("\nSolucao:\n");
-    imprime_solucao(m, s);
+    imprime_solucao(pilhas, s);
     printf("Funcao objetivo = %f\n", fo);
     imprime_concentracoes(resultado, nomes);
 
