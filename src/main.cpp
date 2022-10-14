@@ -80,7 +80,7 @@ int main()
 
     do
     {
-        cout << "iteracao: " << it << endl;
+        // cout << "iteracao: " << it << endl;
 
         // clearing vectors (new solution (s) will be found and new concentration results too (resultado))
         resultado.clear();
@@ -114,10 +114,11 @@ int main()
     imprime_concentracoes(resultado, nomes);
 
     float fo_viz;
-    fo_viz = vizinho_aleatorio(pilhas, s, custos);
+    // fo_viz = vizinho_aleatorio(pilhas, s, custos);
+    fo_viz = best_improvement(pilhas, s, custos);
 
-    int iterMax = 100;
-    fo_viz = descidaRandomica(pilhas, s, custos, iterMax);
+    // int iterMax = 200;
+    // fo_viz = descidaRandomica(pilhas, s, custos, iterMax);
 
     calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
     printf("\nSolucao:\n");

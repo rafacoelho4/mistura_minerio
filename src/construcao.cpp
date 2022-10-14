@@ -44,6 +44,8 @@ void construcao_aleatoria(int n, vector<int> &s, int massa)
         pos = rand() % n;
         // generating random quantity to take from pile
         random = offset + (rand() % range);
+        // cout << "random: " << random << " - mod: " << random % 10 << endl;
+        random -= random % UNIDADE;
         if (s[pos] != 0)
             continue;
         // se soma ultrapassa o máximo, pegar o resto até o desejado
@@ -63,7 +65,7 @@ void calcula_concentracoes(int pilhas, vector<int> &s, int m, float **concentrac
 {
     // clearing any leftover values
     resultado.clear();
-    
+
     // sum of mass of element in total
     vector<float> sumElementos(m);
 
