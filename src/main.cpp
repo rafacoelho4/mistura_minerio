@@ -3,6 +3,7 @@
 #include "util.h"
 #include "file.h"
 #include "construcao.h"
+#include "busca_local.h"
 
 /*
     SOLUÇÃO
@@ -110,6 +111,15 @@ int main()
     printf("\nSolucao:\n");
     imprime_solucao(pilhas, s);
     printf("Funcao objetivo = %f\n", fo);
+    imprime_concentracoes(resultado, nomes);
+
+    float fo_viz;
+    fo_viz = vizinho_aleatorio(pilhas, s, custos);
+
+    calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
+    printf("\nSolucao:\n");
+    imprime_solucao(pilhas, s);
+    printf("Funcao objetivo = %f\n", fo_viz);
     imprime_concentracoes(resultado, nomes);
 
     return 1;

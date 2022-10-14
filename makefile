@@ -4,7 +4,7 @@ EXT = cpp
 # Flags #
 CFLAGS = -Wall -g
 # Object Files #
-OBJECTS = ./bin/file.o ./bin/util.o ./bin/construcao.o 
+OBJECTS = ./bin/file.o ./bin/util.o ./bin/construcao.o ./bin/busca_local.o 
 # Executable # 
 EXE = test
 # Source directory #
@@ -28,6 +28,9 @@ $(BIN_DIR)/util.o: $(SRC_DIR)/util.$(EXT)
 
 $(BIN_DIR)/construcao.o: $(SRC_DIR)/construcao.$(EXT)
 	$(CC) -c $(SRC_DIR)/construcao.$(EXT) -o $(BIN_DIR)/construcao.o
+
+$(BIN_DIR)/busca_local.o: $(SRC_DIR)/busca_local.$(EXT)
+	$(CC) -c $(SRC_DIR)/busca_local.$(EXT) -o $(BIN_DIR)/busca_local.o
 
 # DELETE/CLEAN
 .PHONY : clean remove info

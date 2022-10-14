@@ -61,6 +61,9 @@ void construcao_aleatoria(int n, vector<int> &s, int massa)
 // m: nro de elementos
 void calcula_concentracoes(int pilhas, vector<int> &s, int m, float **concentracoes, vector<float> &resultado)
 {
+    // clearing any leftover values
+    resultado.clear();
+    
     // sum of mass of element in total
     vector<float> sumElementos(m);
 
