@@ -52,12 +52,12 @@ float **cria_matriz_float(int nlinhas, int ncolunas)
 
 void libera_vetor(int *vetor)
 {
-  free(vetor);
+    free(vetor);
 }
 
 void libera_vetor(vector<int> *vetor)
 {
-  delete[] vetor;
+    delete[] vetor;
 }
 
 void imprime_solucao(int n, vector<int> &s)
@@ -70,6 +70,7 @@ void imprime_concentracoes(vector<float> resultado, vector<string> nomes)
 {
     for (int i = 0; i < resultado.size(); i++)
         cout << nomes[i] << ": " << resultado[i] * 100 << "%    ";
+    cout << endl;
 }
 
 float calcula_fo(int n, vector<int> &s, float *custo)

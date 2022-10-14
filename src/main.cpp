@@ -116,6 +116,9 @@ int main()
     float fo_viz;
     fo_viz = vizinho_aleatorio(pilhas, s, custos);
 
+    int iterMax = 100;
+    fo_viz = descidaRandomica(pilhas, s, custos, iterMax);
+
     calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
     printf("\nSolucao:\n");
     imprime_solucao(pilhas, s);

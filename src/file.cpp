@@ -99,3 +99,31 @@ void le_arq_tres_vetores(char nomearq[], int n, vector<float> &vetor1, vector<fl
     }
     fclose(arquivo);
 }
+
+void limpa_arquivo(char nomearq[])
+{
+    FILE *arquivo;
+    arquivo = fopen(nomearq, "w");
+    if (!arquivo)
+    {
+        cout << "O arquivo " << nomearq << "nao pode ser aberto";
+        getchar();
+        exit(1);
+    }
+    fclose(arquivo);
+}
+
+void imprime_fo(char nomearq[], float tempo, float fo, int iteracao)
+{
+    FILE *arquivo;
+    arquivo = fopen(nomearq, "a+");
+
+    if (!arquivo)
+    {
+        cout << "O arquivo " << nomearq << "nao pode ser aberto";
+        getchar();
+        exit(1);
+    }
+    fprintf(arquivo, "%8.5f\t  %4d\t  %7.2f\n", tempo, iteracao, fo);
+    fclose(arquivo);
+}

@@ -18,4 +18,8 @@ void le_arq_tres_vetores(char nomearq[], int n, vector<float> &vetor1, vector<fl
 // m: quantidade de pilhas de minério
 void le_arq_vetor_matriz(char nomearq[], int m, vector<int> &vetor, int n, float **matriz);
 
+void limpa_arquivo(char nomearq[]);
+
+void imprime_fo(char nomearq[], float tempo, float fo, int iteracao);
+
 #endif
