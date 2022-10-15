@@ -72,12 +72,6 @@ int main()
     // seed for random numbers
     srand((unsigned)time(0));
 
-    // construção aleatória
-    // aleatoria(massa, pilhas, custos, s, elementos, concentracoes, resultado, limInf, limSup);
-
-    // // calculando valor da solução atual
-    // fo = calcula_fo(pilhas, s, custos);
-
     do
     {
         // cout << "iteracao: " << it << endl;
@@ -108,20 +102,22 @@ int main()
     if (!valido)
         return 1;
 
-    printf("\nSolucao:\n");
+    printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup));
     imprime_solucao(pilhas, s);
     printf("Funcao objetivo = %f\n", fo);
     imprime_concentracoes(resultado, nomes);
 
     float fo_viz;
     // fo_viz = vizinho_aleatorio(pilhas, s, custos);
-    fo_viz = best_improvement(pilhas, s, custos);
+    fo_viz = best_improvement(pilhas, s, custos, concentracoes, resultado, limInf, limSup);
+    cout << "Apos descida best improvement: ";
 
     // int iterMax = 200;
-    // fo_viz = descidaRandomica(pilhas, s, custos, iterMax);
+    // fo_viz = descidaRandomica(pilhas, s, custos, iterMax, concentracoes, resultado, limInf, limSup);
+    // cout << "Apos descida randomica: ";
 
     calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
-    printf("\nSolucao:\n");
+    printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup));
     imprime_solucao(pilhas, s);
     printf("Funcao objetivo = %f\n", fo_viz);
     imprime_concentracoes(resultado, nomes);

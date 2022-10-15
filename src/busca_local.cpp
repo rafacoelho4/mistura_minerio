@@ -29,38 +29,42 @@ float vizinho_aleatorio(int n, vector<int> &s, float *custos)
     return fo;
 }
 
-float descidaRandomica(int n, vector<int> &s, float *custos, int iterMax)
+float descidaRandomica(int n, vector<int> &s, float *custos, int iterMax,
+                       float **concentracoes, vector<float> &resultado, vector<float> limInf, vector<float> limSup)
 {
     int iter = 0;
-    float fo, fo_viz;
+    float fo, fo_viz, fo_valido;
     clock_t inicio_CPU, fim_CPU;
 
-    // funcao objetiva da soluao corrente
+    // funcao objetiva da solucao corrente
     fo = calcula_fo(n, s, custos);
 
     // solution vector for neighbor
-    vector<int> s_viz = s;
+    vector<int> s_viz = s, s_valido = s;
 
     limpa_arquivo((char *)"output/descidaRandom.txt");
     inicio_CPU = fim_CPU = clock();
     imprime_fo((char *)"output/descidaRandom.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, iter);
 
-    int valido = 0;
+    int valido = 0, it = 0;
     // iterations without improvement
     while (iter < iterMax)
     {
         iter++;
+
         // get random neighbor
         fo_viz = vizinho_aleatorio(n, s_viz, custos);
 
-        /*
-            vizinho pode não ser válido => FAZER VERIFICAÇÃO
-        */
+        // calcula a concentração de cada elemento no produto final
+        calcula_concentracoes(n, s_viz, 5, concentracoes, resultado);
+
+        // checa se a solução possui valores aceitaveis de concentracoes
+        valido = solucao_valida(resultado, limInf, limSup);
 
         // if neighbor is better
-        if (fo_viz < fo)
+        if ((fo_viz < fo) & valido)
         {
-            // cout << "melhorou de " << fo << " para " << fo_viz << endl;
+            // cout << "\n\tmelhorou de " << fo << " para " << fo_viz << endl;
             s = s_viz;
             fo = fo_viz;
             fim_CPU = clock();
@@ -119,15 +123,16 @@ float melhor_vizinho(int n, vector<int> &s, float fo, float *custos, int *melhor
         }
     }
 
-    cout << "melhores i e j: " << *melhor_i << " - " << *melhor_j << "\t qtd: " << *melhor_qtd << endl;
+    // cout << "melhores i e j: " << *melhor_i << " - " << *melhor_j << "\t qtd: " << *melhor_qtd << endl;
 
     return fo_melhor_viz;
 }
 
-float best_improvement(int n, vector<int> &s, float *custos)
+float best_improvement(int n, vector<int> &s, float *custos,
+                       float **concentracoes, vector<float> &resultado, vector<float> limInf, vector<float> limSup)
 {
 
-    int iter = 0, melhor_i, melhor_j, melhor_qtd;
+    int iter = 0, melhor_i, melhor_j, melhor_qtd, valido = 0;
     float fo, fo_viz;
     clock_t inicio_CPU, fim_CPU;
     bool melhorou;
@@ -145,10 +150,28 @@ float best_improvement(int n, vector<int> &s, float *custos)
     do
     {
         melhorou = false;
+
         fo_viz = melhor_vizinho(n, s_viz, fo, custos, &melhor_i, &melhor_j, &melhor_qtd);
 
-        if (fo_viz < fo)
+        // fazer troca para ver se solução vai ser válida
+        s_viz[melhor_i] -= melhor_qtd;
+        s_viz[melhor_j] += melhor_qtd;
+
+        // calcula a concentração de cada elemento no produto final
+        calcula_concentracoes(n, s_viz, 5, concentracoes, resultado);
+
+        // checa se a solução possui valores aceitaveis de concentracoes
+        valido = solucao_valida(resultado, limInf, limSup);
+
+        // desfazendo movimentação
+        s_viz[melhor_i] += melhor_qtd;
+        s_viz[melhor_j] -= melhor_qtd;
+
+        // problema: to verificando se a solucao anterior ao movimento é valido
+
+        if ((fo_viz < fo) && valido)
         {
+            // cout << "fo melhor: " << fo_viz << endl;
             iter++;
             s_viz[melhor_i] -= melhor_qtd;
             s_viz[melhor_j] += melhor_qtd;
