@@ -4,6 +4,7 @@
 #include "file.h"
 #include "construcao.h"
 #include "busca_local.h"
+#include "lahc.h"
 
 /*
     SOLUÇÃO
@@ -105,7 +106,7 @@ int main()
     // proximity with desired concentration
     vector<float> prox;
     // weight for goal proximity
-    int alpha = 1000;
+    int alpha = 5;
 
     // Solucao antes de refinamento
     printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup));
@@ -123,9 +124,12 @@ int main()
     // fo_viz = best_improvement(pilhas, s, custos, concentracoes, resultado, limInf, limSup, meta, alpha);
     // cout << "Apos descida best improvement: ";
 
-    int iterMax = 600;
-    fo_viz = descidaRandomica(pilhas, s, custos, iterMax, concentracoes, resultado, limInf, limSup, meta, alpha);
-    cout << "Apos descida randomica: ";
+    // int iterMax = 600;
+    // fo_viz = descidaRandomica(pilhas, s, custos, iterMax, concentracoes, resultado, limInf, limSup, meta, alpha);
+    // cout << "Apos descida randomica: ";
+
+    int l = 40, m = 60, alphaLAHC = -50;
+    fo_viz = LAHC(pilhas, s, custos, concentracoes, resultado, limInf, limSup, meta, alphaLAHC, l, m);
 
     // Solucao apos refinamento
     calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
