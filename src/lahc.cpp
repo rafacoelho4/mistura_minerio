@@ -1,6 +1,6 @@
 #include "lahc.h"
 
-float LAHC(int pilhas, vector<int> &s, int massa, float *custos, float **concentracoes,
+float LAHC(int pilhas, vector<int> &s, int massa, float *custos, float **concentracoes, vector<int> qtd,
            vector<float> &resultado, vector<float> limInf, vector<float> limSup, vector<float> meta, int alpha, int l, int m)
 {
     // fo da solucao corrente e da solucao vizinha
@@ -43,11 +43,13 @@ float LAHC(int pilhas, vector<int> &s, int massa, float *custos, float **concent
 
     // melhor solução ate agora é a inicial
     s_star = s;
+    int it = 0;
 
+    // while (r <= m && it < 10000)
     while (r <= m)
     {
         // random neighbor
-        construcao_aleatoria(pilhas, s_viz, massa, 500, massa/5);
+        construcao_aleatoria(pilhas, s_viz, massa, 100, massa / 10);
 
         // funcao objetiva
         fo_viz = calcula_fo(pilhas, s_viz, custos);
@@ -56,7 +58,10 @@ float LAHC(int pilhas, vector<int> &s, int massa, float *custos, float **concent
         calcula_concentracoes(pilhas, s_viz, resultado.size(), concentracoes, resultado);
 
         // checa se a solução possui valores aceitaveis de concentracoes
-        valido = solucao_valida(resultado, limInf, limSup);
+        valido = solucao_valida(resultado, limInf, limSup, s, qtd);
+
+        // cout << it << endl;
+        it++;
 
         // só trabalhando com soluções com concentrações aceitaveis
         if (!valido)
@@ -72,7 +77,7 @@ float LAHC(int pilhas, vector<int> &s, int massa, float *custos, float **concent
         {
             // se houver melhora, reiniciar iterador
             if (fo_viz < fo)
-                r = 0;
+                r = it = 0;
 
             // atualizando solução corrente
             s = s_viz;

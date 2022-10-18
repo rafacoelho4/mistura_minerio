@@ -90,13 +90,14 @@ int main()
 
     do
     {
+        // cout << it << endl;
         // clearing vectors (new solution (s) will be found and new concentration results too (resultado))
         resultado.clear();
         s.clear();
 
         // construcao da solucao inicial
-        construcao_aleatoria(pilhas, s, massa, 100, massa / 10);
-        // construcao_exemplo(pilhas, s);
+        // construcao_aleatoria(pilhas, s, massa, 100, massa / 10);
+        construcao_exemplo(pilhas, s);
 
         // calculando valor da solução atual
         fo = calcula_fo(pilhas, s, custos);
@@ -105,7 +106,7 @@ int main()
         calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
 
         // checa se a solução possui valores aceitaveis de concentracoes
-        valido = solucao_valida(resultado, limInf, limSup);
+        valido = solucao_valida(resultado, limInf, limSup, s, qtd);
 
         // incrementing iteration variable
         it++;
@@ -125,10 +126,11 @@ int main()
     int alpha = 5;
 
     // Solucao antes de refinamento
-    printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup));
+    printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup, s, qtd));
     imprime_solucao(pilhas, s);
     printf("Funcao objetivo = %f\n", fo);
     imprime_concentracoes(resultado, nomes);
+    cout << "distancia relativa: " << proximo_meta(elementos, resultado, meta, intervalo) << endl;
 
     vector<float> old = resultado;
     float oldfo = fo;
@@ -145,17 +147,18 @@ int main()
     // cout << "Apos descida randomica: ";
 
     // LAHC
-    int l = 40, m = 60, alphaLAHC = -50;
+    int l = 20, m = 30, alphaLAHC = -50;
     // int l = 40, m = 60, alphaLAHC = -200;
-    fo_viz = LAHC(pilhas, s, massa, custos, concentracoes, resultado, limInf, limSup, meta, alphaLAHC, l, m);
+    fo_viz = LAHC(pilhas, s, massa, custos, concentracoes, qtd, resultado, limInf, limSup, meta, alphaLAHC, l, m);
     cout << "Apos LAHC: ";
 
     // Solucao apos refinamento
     calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
-    printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup));
+    printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup, s, qtd));
     imprime_solucao(pilhas, s);
     printf("Funcao objetivo = %f\n", fo_viz);
     imprime_concentracoes(resultado, nomes);
+    cout << "distancia relativa: " << proximo_meta(elementos, resultado, meta, intervalo) << endl;
 
     // comparando concentracoes da primeira solucao e a ultima solucao encontrada
     vector<float> novo = resultado;

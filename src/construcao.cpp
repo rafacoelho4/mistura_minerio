@@ -93,8 +93,12 @@ void calcula_concentracoes(int pilhas, vector<int> &s, int m, float **concentrac
         resultado.push_back(sumElementos[i] / massatotal);
 }
 
-int solucao_valida(vector<float> resultado, vector<float> limInf, vector<float> limSup)
+int solucao_valida(vector<float> resultado, vector<float> limInf, vector<float> limSup, vector<int> s, vector<int> qtd)
 {
+    // for (int i = 0; i < qtd.size(); i++)
+    //     if (s[i] > qtd[i])
+    //         return 0;
+
     for (int i = 0; i < resultado.size(); i++)
     {
         if (((resultado[i] * 100) >= limInf[i]) && ((resultado[i] * 100) <= limSup[i]))
@@ -102,6 +106,8 @@ int solucao_valida(vector<float> resultado, vector<float> limInf, vector<float> 
         else
             return 0;
     }
+
+    cout << "*";
 
     return 1;
 }

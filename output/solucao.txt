@@ -1,18 +1,18 @@
-Pilha 1:     0
+Pilha 1:   530
 Pilha 2:     0
-Pilha 3:     0
-Pilha 4:  2630
-Pilha 5:   970
+Pilha 3:   660
+Pilha 4:  1680
+Pilha 5:   260
 Pilha 6:     0
-Pilha 7:     0
-Pilha 8:     0
+Pilha 7:   210
+Pilha 8:   850
 Pilha 9:     0
-Pilha 10:  1360
+Pilha 10:   980
 Pilha 11:     0
 Pilha 12:     0
-Pilha 13:     0
-Pilha 14:  1040
-Pilha 15:     0
-Funcao objetivo: 65319.00
-Fe: 48.3462		Al2O3: 0.2800		P: 0.0383		PPC: 2.5469		He: 45.7517		
+Pilha 13:   150
+Pilha 14:     0
+Pilha 15:   680
+Funcao objetivo: 66896.00
+Fe: 47.4263		Al2O3: 0.3025		P: 0.0421		PPC: 2.6077		He: 42.9750		
 Distancia para meta:  0.00

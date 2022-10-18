@@ -76,7 +76,7 @@ float descidaRandomica(int n, vector<int> &s, float *custos, int iterMax, float 
         distance *= alpha;
 
         // checa se a solução possui valores aceitaveis de concentracoes
-        valido = solucao_valida(resultado, limInf, limSup);
+        // valido = solucao_valida(resultado, limInf, limSup);
 
         // we want to reach the concentration goal values
         fo_viz += distance;
@@ -202,7 +202,7 @@ float best_improvement(int n, vector<int> &s, float *custos, float **concentraco
         distance *= alpha;
 
         // checa se a solução possui valores aceitaveis de concentracoes
-        valido = solucao_valida(resultado, limInf, limSup);
+        // valido = solucao_valida(resultado, limInf, limSup);
 
         // desfazendo movimentação
         s_viz[melhor_i] += melhor_qtd;
