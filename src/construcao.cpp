@@ -107,15 +107,20 @@ int solucao_valida(vector<float> resultado, vector<float> limInf, vector<float> 
     return 1;
 }
 
-float proximo_meta(int elementos, vector<float> resultado, vector<float> meta)
+float proximo_meta(int elementos, vector<float> resultado, vector<float> meta, vector<float> intervalo)
 {
     float total = 0;
 
-    // go through every element in resultado and see difference with meta
     for (int i = 0; i < elementos; i++)
-        total += fabs(meta[i] - (resultado[i] * 100));
+    {
+        // diferença entre concentração resultado e a meta
+        // vezes 100 já que valores de meta estao em porcentagem
+        // dividido pelo tamanho do intervalo limite superior e limite inferior
+        // vezes 10 para tirar dos valores menores que 1
+        total += ((fabs(meta[i] - (resultado[i] * 100))) / intervalo[i]) * 10;
 
-    // cout << "distance to goal: " << total << endl;
+        // cout << "difference: " << ((fabs(meta[i] - (resultado[i] * 100))) / intervalo[i]) * 10 << endl;
+    }
 
     return total;
 }

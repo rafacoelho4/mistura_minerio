@@ -9,13 +9,17 @@ float LAHC(int pilhas, vector<int> &s, int massa, float *custos, float **concent
     // posição p começa no 0 assim como iterador r
     int r = 0, p = 0, valido;
 
+    vector<float> intervalo;
+    for (int i = 0; i < limInf.size(); i++)
+        intervalo.push_back(limSup[i] - limInf[i]);
+
     // cpu time
     clock_t inicio_CPU, fim_CPU;
 
     // funcao objetiva
     fo = calcula_fo(pilhas, s, custos);
     // distance to desired concentration for all elements
-    distance = proximo_meta(resultado.size(), resultado, meta);
+    distance = proximo_meta(resultado.size(), resultado, meta, intervalo);
     // não adicionando multiplicador alpha na primeira iteração
 
     fo += distance;
@@ -57,6 +61,9 @@ float LAHC(int pilhas, vector<int> &s, int massa, float *custos, float **concent
         // só trabalhando com soluções com concentrações aceitaveis
         if (!valido)
             continue;
+
+        // calculando distancia da solução atual ate a meta estabelecida
+        distance = proximo_meta(resultado.size(), resultado, meta, intervalo);
 
         fo_viz += distance;
 

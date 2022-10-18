@@ -127,3 +127,30 @@ void imprime_fo(char nomearq[], float tempo, float fo, int iteracao, float dista
     fprintf(arquivo, "%8.5f\t  %4d\t  %7.2f\t %7.2f\n", tempo, iteracao, fo, distance);
     fclose(arquivo);
 }
+
+void imprime_s(char nomearq[], int pilhas, int elementos, vector<int> s, float fo,
+               vector<float> resultado, vector<string> nomes, float distance)
+{
+    FILE *arquivo;
+    arquivo = fopen(nomearq, "a+");
+
+    if (!arquivo)
+    {
+        cout << "O arquivo " << nomearq << "nao pode ser aberto";
+        getchar();
+        exit(1);
+    }
+
+    int qtd;
+    for (int i = 0; i < pilhas && s[i] != -1; i++)
+        fprintf(arquivo, "Pilha %d: %5d\n", i + 1, s[i]);
+
+    fprintf(arquivo, "Funcao objetivo: %5.2f\n", fo);
+
+    for (int i = 0; i < elementos && s[i] != -1; i++)
+        fprintf(arquivo, "%s: %5.4f\t\t", nomes[i].c_str(), resultado[i] * 100);
+
+    fprintf(arquivo, "\nDistancia para meta: %5.2f\n", distance);
+
+    fclose(arquivo);
+}

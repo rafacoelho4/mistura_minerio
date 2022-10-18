@@ -1,0 +1,18 @@
+Pilha 1:   250
+Pilha 2:     0
+Pilha 3:     0
+Pilha 4:  1270
+Pilha 5:  1510
+Pilha 6:     0
+Pilha 7:     0
+Pilha 8:   580
+Pilha 9:     0
+Pilha 10:   620
+Pilha 11:  1020
+Pilha 12:     0
+Pilha 13:     0
+Pilha 14:     0
+Pilha 15:   750
+Funcao objetivo: 66207.00
+Fe: 46.5563		Al2O3: 0.3004		P: 0.0375		PPC: 2.6341		He: 39.1750		
+Distancia para meta: 11.44

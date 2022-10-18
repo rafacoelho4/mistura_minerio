@@ -65,6 +65,11 @@ int main()
     // lendo limites das concentracoes dos elementos no produto final
     le_arq_tres_vetores((char *)"input/limites.txt", elementos, limSup, meta, limInf);
 
+    // diferenca entre limite superior e inferior para cada elemento
+    vector<float> intervalo;
+    for (int i = 0; i < limInf.size(); i++)
+        intervalo.push_back(limSup[i] - limInf[i]);
+
     // concentracoes dos elementos no produto final
     vector<float> resultado;
 
@@ -80,8 +85,8 @@ int main()
         s.clear();
 
         // construcao da solucao inicial
-        // construcao_aleatoria(pilhas, s, massa);
-        construcao_exemplo(pilhas, s);
+        construcao_aleatoria(pilhas, s, massa);
+        // construcao_exemplo(pilhas, s);
 
         // calculando valor da solução atual
         fo = calcula_fo(pilhas, s, custos);
@@ -111,12 +116,12 @@ int main()
     imprime_solucao(pilhas, s);
     printf("Funcao objetivo = %f\n", fo);
     imprime_concentracoes(resultado, nomes);
-    float distance = proximo_meta(resultado.size(), resultado, meta);
+    float distance = proximo_meta(resultado.size(), resultado, meta, intervalo);
     cout << "distancia: " << distance << endl;
     distance *= alpha;
     // cout << "funcao objetiva: " << fo << " + " << distance / alpha << " = " << fo + distance << endl;
 
-    proximo_meta(elementos, resultado, meta);
+    proximo_meta(elementos, resultado, meta, intervalo);
 
     float fo_viz;
     // fo_viz = best_improvement(pilhas, s, custos, concentracoes, resultado, limInf, limSup, meta, alpha);
@@ -126,7 +131,7 @@ int main()
     // fo_viz = descidaRandomica(pilhas, s, custos, iterMax, concentracoes, resultado, limInf, limSup, meta, alpha);
     // cout << "Apos descida randomica: ";
 
-    int l = 30, m = 40, alphaLAHC = -20;
+    int l = 40, m = 60, alphaLAHC = -30;
     fo_viz = LAHC(pilhas, s, massa, custos, concentracoes, resultado, limInf, limSup, meta, alphaLAHC, l, m);
 
     // Solucao apos refinamento
@@ -136,8 +141,11 @@ int main()
     printf("Funcao objetivo = %f\n", fo_viz);
     imprime_concentracoes(resultado, nomes);
 
-    distance = proximo_meta(elementos, resultado, meta);
+    distance = proximo_meta(elementos, resultado, meta, intervalo);
     cout << "distancia: " << distance << endl;
+
+    limpa_arquivo((char *)"output/solucao.txt");
+    imprime_s((char *)"output/solucao.txt", pilhas, elementos, s, fo_viz, resultado, nomes, distance);
 
     return 1;
 }

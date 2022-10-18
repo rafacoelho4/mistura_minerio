@@ -11,6 +11,6 @@ void construcao_aleatoria(int n, vector<int> &s, int massa);
 
 void calcula_concentracoes(int pilhas, vector<int> &s, int m, float **concentracoes, vector<float> &resultado);
 int solucao_valida(vector<float> resultado, vector<float> limInf, vector<float> limSup);
-float proximo_meta(int elementos, vector<float> resultado, vector<float> meta);
+float proximo_meta(int elementos, vector<float> resultado, vector<float> meta, vector<float> intervalo);
 
 #endif
