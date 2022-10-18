@@ -107,38 +107,15 @@ int solucao_valida(vector<float> resultado, vector<float> limInf, vector<float> 
     return 1;
 }
 
-/*
-void aleatoria(int massa, int pilhas,  float *custos, vector<int> &s, int m, float **concentracoes,
-               vector<float> &resultado, vector<float> limInf, vector<float> limSup)
+float proximo_meta(int elementos, vector<float> resultado, vector<float> meta)
 {
-    float fo;
-    int valido, it = 0;
+    float total = 0;
 
-    // seed for random numbers
-    srand((unsigned)time(0));
+    // go through every element in resultado and see difference with meta
+    for (int i = 0; i < elementos; i++)
+        total += fabs(meta[i] - (resultado[i] * 100));
 
-    do
-    {
-        cout << "iteracao: " << it << endl;
+    // cout << "distance to goal: " << total << endl;
 
-        // clearing vectors (new solution (s) will be found and new concentration results too (resultado))
-        resultado.clear();
-        s.clear();
-
-        // construcao da solucao inicial
-        construcao_aleatoria(pilhas, s, massa);
-
-        // calculando valor da solução atual
-        fo = calcula_fo(pilhas, s, custos);
-
-        // calcula a concentração de cada elemento no produto final
-        calcula_concentracoes(pilhas, s, m, concentracoes, resultado);
-
-        // checa se a solução possui valores aceitaveis de concentracoes
-        valido = solucao_valida(resultado, limInf, limSup);
-
-        // incrementing iteration variable
-        it++;
-    } while (valido == 0 && it < 400);
+    return total;
 }
-*/

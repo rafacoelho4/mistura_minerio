@@ -29,22 +29,31 @@ float vizinho_aleatorio(int n, vector<int> &s, float *custos)
     return fo;
 }
 
-float descidaRandomica(int n, vector<int> &s, float *custos, int iterMax,
-                       float **concentracoes, vector<float> &resultado, vector<float> limInf, vector<float> limSup)
+float descidaRandomica(int n, vector<int> &s, float *custos, int iterMax, float **concentracoes,
+                       vector<float> &resultado, vector<float> limInf, vector<float> limSup, vector<float> meta, int alpha)
 {
     int iter = 0;
     float fo, fo_viz, fo_valido;
     clock_t inicio_CPU, fim_CPU;
 
+    // distance to goal concentration
+    float distance;
+
     // funcao objetiva da solucao corrente
     fo = calcula_fo(n, s, custos);
+    // distance to desired concentration for all elements
+    distance = proximo_meta(resultado.size(), resultado, meta);
+    distance *= alpha;
+    // cout << "INICIO!! fo sera: " << fo << " + " << distance << " = " << fo + distance << endl;
+
+    fo += distance;
 
     // solution vector for neighbor
     vector<int> s_viz = s, s_valido = s;
 
     limpa_arquivo((char *)"output/descidaRandom.txt");
     inicio_CPU = fim_CPU = clock();
-    imprime_fo((char *)"output/descidaRandom.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, iter);
+    imprime_fo((char *)"output/descidaRandom.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo - distance, iter, distance / alpha);
 
     int valido = 0, it = 0;
     // iterations without improvement
@@ -56,25 +65,39 @@ float descidaRandomica(int n, vector<int> &s, float *custos, int iterMax,
         fo_viz = vizinho_aleatorio(n, s_viz, custos);
 
         // calcula a concentração de cada elemento no produto final
-        calcula_concentracoes(n, s_viz, 5, concentracoes, resultado);
+        calcula_concentracoes(n, s_viz, resultado.size(), concentracoes, resultado);
+
+        // distance to desired concentration for all elements
+        distance = proximo_meta(resultado.size(), resultado, meta);
+        distance *= alpha;
 
         // checa se a solução possui valores aceitaveis de concentracoes
         valido = solucao_valida(resultado, limInf, limSup);
 
+        // we want to reach the concentration goal values
+        fo_viz += distance;
+
+        // if (valido)
+        //     cout << "comparando: " << fo << " & " << fo_viz << endl;
+
         // if neighbor is better
         if ((fo_viz < fo) & valido)
         {
-            // cout << "\n\tmelhorou de " << fo << " para " << fo_viz << endl;
+            cout << "fo sera: " << fo_viz - distance << " + " << distance << " = " << fo_viz << endl;
             s = s_viz;
             fo = fo_viz;
             fim_CPU = clock();
-            imprime_fo((char *)"output/descidaRandom.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, iter);
+            imprime_fo((char *)"output/descidaRandom.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, iter, distance / alpha);
             // restart iteration
             iter = 0;
         }
     }
 
-    return fo;
+    calcula_concentracoes(n, s, resultado.size(), concentracoes, resultado);
+    distance = proximo_meta(resultado.size(), resultado, meta);
+    distance *= alpha;
+
+    return fo - distance;
 }
 
 float melhor_vizinho(int n, vector<int> &s, float fo, float *custos, int *melhor_i, int *melhor_j, int *melhor_qtd)
@@ -128,8 +151,8 @@ float melhor_vizinho(int n, vector<int> &s, float fo, float *custos, int *melhor
     return fo_melhor_viz;
 }
 
-float best_improvement(int n, vector<int> &s, float *custos,
-                       float **concentracoes, vector<float> &resultado, vector<float> limInf, vector<float> limSup)
+float best_improvement(int n, vector<int> &s, float *custos, float **concentracoes,
+                       vector<float> &resultado, vector<float> limInf, vector<float> limSup, vector<float> meta, int alpha)
 {
 
     int iter = 0, melhor_i, melhor_j, melhor_qtd, valido = 0;
@@ -137,15 +160,23 @@ float best_improvement(int n, vector<int> &s, float *custos,
     clock_t inicio_CPU, fim_CPU;
     bool melhorou;
 
+    float distance;
+
     // funcao objetiva da soluao corrente
     fo = fo_viz = calcula_fo(n, s, custos);
+
+    // distance to desired concentration for all elements
+    distance = proximo_meta(resultado.size(), resultado, meta);
+    distance *= alpha;
+
+    fo += distance;
 
     // solution vector for neighbor
     vector<int> s_viz = s;
 
     limpa_arquivo((char *)"output/descidaBestImprov.txt");
     inicio_CPU = fim_CPU = clock();
-    imprime_fo((char *)"output/descidaBestImprov.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, iter);
+    imprime_fo((char *)"output/descidaBestImprov.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, iter, distance / alpha);
 
     do
     {
@@ -160,6 +191,10 @@ float best_improvement(int n, vector<int> &s, float *custos,
         // calcula a concentração de cada elemento no produto final
         calcula_concentracoes(n, s_viz, 5, concentracoes, resultado);
 
+        // distance to desired concentration for all elements
+        distance = proximo_meta(resultado.size(), resultado, meta);
+        distance *= alpha;
+
         // checa se a solução possui valores aceitaveis de concentracoes
         valido = solucao_valida(resultado, limInf, limSup);
 
@@ -167,11 +202,13 @@ float best_improvement(int n, vector<int> &s, float *custos,
         s_viz[melhor_i] += melhor_qtd;
         s_viz[melhor_j] -= melhor_qtd;
 
-        // problema: to verificando se a solucao anterior ao movimento é valido
+        // we want to reach the concentration goal values
+        fo_viz += distance;
 
         if ((fo_viz < fo) && valido)
         {
             // cout << "fo melhor: " << fo_viz << endl;
+            cout << "fo sera: " << fo_viz - distance << " + " << distance << " = " << fo_viz << endl;
             iter++;
             s_viz[melhor_i] -= melhor_qtd;
             s_viz[melhor_j] += melhor_qtd;
@@ -181,11 +218,15 @@ float best_improvement(int n, vector<int> &s, float *custos,
             s = s_viz;
 
             fim_CPU = clock();
-            imprime_fo((char *)"output/descidaBestImprov.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, iter);
+            imprime_fo((char *)"output/descidaBestImprov.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, iter, distance / alpha);
         }
     } while (melhorou);
 
-    return fo;
+    calcula_concentracoes(n, s, resultado.size(), concentracoes, resultado);
+    distance = proximo_meta(resultado.size(), resultado, meta);
+    distance *= alpha;
+
+    return fo - distance;
 }
 
 float first_improvement(int n, vector<int> &s, float *custos, int iterMax)
@@ -203,7 +244,7 @@ float first_improvement(int n, vector<int> &s, float *custos, int iterMax)
 
     limpa_arquivo((char *)"output/descidaFirstImprov.txt");
     inicio_CPU = fim_CPU = clock();
-    imprime_fo((char *)"output/descidaFirstImprov.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, iter);
+    imprime_fo((char *)"output/descidaFirstImprov.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, iter, fo);
 
     do
     {
@@ -217,7 +258,7 @@ float first_improvement(int n, vector<int> &s, float *custos, int iterMax)
             s = s_viz;
             fo = fo_viz;
             fim_CPU = clock();
-            imprime_fo((char *)"output/descidaRandom.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, iter);
+            imprime_fo((char *)"output/descidaRandom.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, iter, fo);
 
             break;
         }

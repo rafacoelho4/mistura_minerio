@@ -102,25 +102,40 @@ int main()
     if (!valido)
         return 1;
 
+    // proximity with desired concentration
+    vector<float> prox;
+    // weight for goal proximity
+    int alpha = 1000;
+
+    // Solucao antes de refinamento
     printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup));
     imprime_solucao(pilhas, s);
     printf("Funcao objetivo = %f\n", fo);
     imprime_concentracoes(resultado, nomes);
+    float distance = proximo_meta(resultado.size(), resultado, meta);
+    cout << "distancia: " << distance << endl;
+    distance *= alpha;
+    // cout << "funcao objetiva: " << fo << " + " << distance / alpha << " = " << fo + distance << endl;
+
+    proximo_meta(elementos, resultado, meta);
 
     float fo_viz;
-    // fo_viz = vizinho_aleatorio(pilhas, s, custos);
-    fo_viz = best_improvement(pilhas, s, custos, concentracoes, resultado, limInf, limSup);
-    cout << "Apos descida best improvement: ";
+    // fo_viz = best_improvement(pilhas, s, custos, concentracoes, resultado, limInf, limSup, meta, alpha);
+    // cout << "Apos descida best improvement: ";
 
-    // int iterMax = 200;
-    // fo_viz = descidaRandomica(pilhas, s, custos, iterMax, concentracoes, resultado, limInf, limSup);
-    // cout << "Apos descida randomica: ";
+    int iterMax = 600;
+    fo_viz = descidaRandomica(pilhas, s, custos, iterMax, concentracoes, resultado, limInf, limSup, meta, alpha);
+    cout << "Apos descida randomica: ";
 
+    // Solucao apos refinamento
     calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
     printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup));
     imprime_solucao(pilhas, s);
     printf("Funcao objetivo = %f\n", fo_viz);
     imprime_concentracoes(resultado, nomes);
+
+    distance = proximo_meta(elementos, resultado, meta);
+    cout << "distancia: " << distance << endl;
 
     return 1;
 }

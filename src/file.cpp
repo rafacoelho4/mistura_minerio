@@ -113,7 +113,7 @@ void limpa_arquivo(char nomearq[])
     fclose(arquivo);
 }
 
-void imprime_fo(char nomearq[], float tempo, float fo, int iteracao)
+void imprime_fo(char nomearq[], float tempo, float fo, int iteracao, float distance)
 {
     FILE *arquivo;
     arquivo = fopen(nomearq, "a+");
@@ -124,6 +124,6 @@ void imprime_fo(char nomearq[], float tempo, float fo, int iteracao)
         getchar();
         exit(1);
     }
-    fprintf(arquivo, "%8.5f\t  %4d\t  %7.2f\n", tempo, iteracao, fo);
+    fprintf(arquivo, "%8.5f\t  %4d\t  %7.2f\t %7.2f\n", tempo, iteracao, fo, distance);
     fclose(arquivo);
 }

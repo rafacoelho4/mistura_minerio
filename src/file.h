@@ -20,6 +20,6 @@ void le_arq_vetor_matriz(char nomearq[], int m, vector<int> &vetor, int n, float
 
 void limpa_arquivo(char nomearq[]);
 
-void imprime_fo(char nomearq[], float tempo, float fo, int iteracao);
+void imprime_fo(char nomearq[], float tempo, float fo, int iteracao, float distance);
 
 #endif
