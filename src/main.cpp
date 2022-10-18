@@ -6,6 +6,8 @@
 #include "busca_local.h"
 #include "lahc.h"
 
+#include <iostream>
+
 /*
     SOLUÇÃO
         formato:
@@ -28,8 +30,12 @@
 
 int main()
 {
+    // ex1: 5 elementos, 15 pilhas, 6000 massa desejada
+    // ex2: 7 elementos, 6 pilhas, 6100 massa desejada
+
     // numero de elementos analisados e nro de pilhas disponiveis
     int elementos = 5, pilhas = 15;
+    // int elementos = 7, pilhas = 6;
     // custos: vetor que armazena valor para movimentar uma unidade da pilha i
     // fo: valor da função objetiva (custo da solução)
     float *custos, fo;
@@ -37,6 +43,7 @@ int main()
     vector<int> s;
     // massa desejada pro produto final
     int massa = 6000;
+    // int massa = 6100;
 
     // criando vetor de custo
     custos = cria_vetor_float(pilhas);
@@ -73,7 +80,10 @@ int main()
     // concentracoes dos elementos no produto final
     vector<float> resultado;
 
-    int valido, it = 0;
+    // valido terá valor 1 se solução apresentar concentrações finais aceitaveis
+    int valido = 0, it = 0;
+    // distancia relativa até a meta
+    float distance;
 
     // seed for random numbers
     srand((unsigned)time(0));
@@ -85,7 +95,7 @@ int main()
         s.clear();
 
         // construcao da solucao inicial
-        construcao_aleatoria(pilhas, s, massa);
+        construcao_aleatoria(pilhas, s, massa, 100, massa / 10);
         // construcao_exemplo(pilhas, s);
 
         // calculando valor da solução atual
@@ -99,12 +109,15 @@ int main()
 
         // incrementing iteration variable
         it++;
-    } while (valido == 0 && it < 400);
+    } while (valido == 0 && it < 800);
 
     valido ? cout << "solucao encontrada!" : cout << "solucao nao encontrada...";
 
     if (!valido)
+    {
+        libera_matriz_float(concentracoes, pilhas);
         return 1;
+    }
 
     // proximity with desired concentration
     vector<float> prox;
@@ -116,23 +129,26 @@ int main()
     imprime_solucao(pilhas, s);
     printf("Funcao objetivo = %f\n", fo);
     imprime_concentracoes(resultado, nomes);
-    float distance = proximo_meta(resultado.size(), resultado, meta, intervalo);
-    cout << "distancia: " << distance << endl;
-    distance *= alpha;
-    // cout << "funcao objetiva: " << fo << " + " << distance / alpha << " = " << fo + distance << endl;
 
-    proximo_meta(elementos, resultado, meta, intervalo);
+    vector<float> old = resultado;
+    float oldfo = fo;
 
     float fo_viz;
+
+    // BEST IMPROVEMENT
     // fo_viz = best_improvement(pilhas, s, custos, concentracoes, resultado, limInf, limSup, meta, alpha);
     // cout << "Apos descida best improvement: ";
 
+    // DESCIDA RANDOMICA
     // int iterMax = 600;
     // fo_viz = descidaRandomica(pilhas, s, custos, iterMax, concentracoes, resultado, limInf, limSup, meta, alpha);
     // cout << "Apos descida randomica: ";
 
-    int l = 40, m = 60, alphaLAHC = -30;
+    // LAHC
+    int l = 40, m = 60, alphaLAHC = -50;
+    // int l = 40, m = 60, alphaLAHC = -200;
     fo_viz = LAHC(pilhas, s, massa, custos, concentracoes, resultado, limInf, limSup, meta, alphaLAHC, l, m);
+    cout << "Apos LAHC: ";
 
     // Solucao apos refinamento
     calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
@@ -141,8 +157,36 @@ int main()
     printf("Funcao objetivo = %f\n", fo_viz);
     imprime_concentracoes(resultado, nomes);
 
-    distance = proximo_meta(elementos, resultado, meta, intervalo);
-    cout << "distancia: " << distance << endl;
+    // comparando concentracoes da primeira solucao e a ultima solucao encontrada
+    vector<float> novo = resultado;
+    vector<string> melhores;
+    float novofo = fo_viz;
+
+    cout << "\nfo da primeira solucao e depois refinamento: " << endl;
+    cout << oldfo << " - " << novofo << endl;
+
+    if (oldfo < novofo)
+        cout << "\tsolucao anterior e melhor em custo" << endl;
+    else if (oldfo == novofo)
+        cout << "\tcustos iguais antes e depois";
+    else
+        cout << "\tcustos novo e menor por " << oldfo - novofo << endl;
+
+    cout << "\ndistancia ate meta na primeira solucao e depois refinamento: " << endl;
+    imprime_distancia(old, nomes, meta);
+    imprime_distancia(novo, nomes, meta);
+    for (int i = 0; i < meta.size(); i++)
+        if ((fabs(meta[i] - (novo[i] * 100))) <= (fabs(meta[i] - (old[i] * 100))))
+            melhores.push_back(nomes[i]);
+
+    if (melhores.size() == 0)
+        cout << "\tsolucao anterior e melhor em todas os elementos";
+    else
+    {
+        cout << "\tsolucao nova e melhor em (" << melhores.size() << "): ";
+        for (int i = 0; i < melhores.size(); i++)
+            cout << melhores[i] << ", ";
+    }
 
     limpa_arquivo((char *)"output/solucao.txt");
     imprime_s((char *)"output/solucao.txt", pilhas, elementos, s, fo_viz, resultado, nomes, distance);

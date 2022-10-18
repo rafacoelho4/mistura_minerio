@@ -60,6 +60,15 @@ void libera_vetor(vector<int> *vetor)
     delete[] vetor;
 }
 
+void libera_matriz_float(float **matriz, int nlinhas)
+{
+    int i;
+
+    for (i = nlinhas - 1; i >= 0; i--)
+        free((float *)matriz[i]);
+    free((float *)matriz);
+}
+
 void imprime_solucao(int n, vector<int> &s)
 {
     for (int i = 0; i < n && s[i] != -1; i++)
@@ -70,6 +79,16 @@ void imprime_concentracoes(vector<float> resultado, vector<string> nomes)
 {
     for (int i = 0; i < resultado.size(); i++)
         cout << nomes[i] << ": " << resultado[i] * 100 << "%    ";
+    cout << endl;
+}
+
+void imprime_distancia(vector<float> resultado, vector<string> nomes, vector<float> meta)
+{
+    for (int i = 0; i < resultado.size(); i++)
+    {
+        cout << nomes[i] << ": ";
+        printf("%.3f%%      ", fabs(meta[i] - (resultado[i] * 100)));
+    }
     cout << endl;
 }
 

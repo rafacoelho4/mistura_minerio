@@ -27,7 +27,7 @@ void construcao_exemplo(int n, vector<int> &s)
     s.push_back(1120);
 }
 
-void construcao_aleatoria(int n, vector<int> &s, int massa)
+void construcao_aleatoria(int n, vector<int> &s, int massa, int offset, int range)
 {
     s.clear();
     // initial state with zero
@@ -35,7 +35,7 @@ void construcao_aleatoria(int n, vector<int> &s, int massa)
         s.push_back(0);
 
     // values will vary between 500 and 2000 (if massa = 6000)
-    int random, offset = 500, range = massa / 5;
+    int random;
 
     int sum = 0, resto, pos;
     while (sum < massa)
@@ -44,18 +44,18 @@ void construcao_aleatoria(int n, vector<int> &s, int massa)
         pos = rand() % n;
         // generating random quantity to take from pile
         random = offset + (rand() % range);
-        // cout << "random: " << random << " - mod: " << random % 10 << endl;
+        // sem valores quebrados, apenas multiplos de 10
         random -= random % UNIDADE;
-        if (s[pos] != 0)
-            continue;
+        // if (s[pos] != 0)
+        //     continue;
         // se soma ultrapassa o máximo, pegar o resto até o desejado
         if (sum + random > massa)
         {
             resto = massa - sum;
-            s[pos] = resto;
+            s[pos] += resto;
             break;
         }
-        s[pos] = random;
+        s[pos] += random;
         sum += random;
     }
 }
@@ -97,7 +97,6 @@ int solucao_valida(vector<float> resultado, vector<float> limInf, vector<float> 
 {
     for (int i = 0; i < resultado.size(); i++)
     {
-        // cout << limInf[i] << " - " << resultado[i] * 100 << " - " << limSup[i] << endl;
         if (((resultado[i] * 100) >= limInf[i]) && ((resultado[i] * 100) <= limSup[i]))
             continue;
         else
@@ -113,6 +112,8 @@ float proximo_meta(int elementos, vector<float> resultado, vector<float> meta, v
 
     for (int i = 0; i < elementos; i++)
     {
+        if (intervalo[i] == 0)
+            continue;
         // diferença entre concentração resultado e a meta
         // vezes 100 já que valores de meta estao em porcentagem
         // dividido pelo tamanho do intervalo limite superior e limite inferior

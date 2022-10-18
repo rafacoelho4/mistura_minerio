@@ -7,7 +7,7 @@
 #include <math.h>
 
 void construcao_exemplo(int n, vector<int> &s);
-void construcao_aleatoria(int n, vector<int> &s, int massa);
+void construcao_aleatoria(int n, vector<int> &s, int massa, int offset, int range);
 
 void calcula_concentracoes(int pilhas, vector<int> &s, int m, float **concentracoes, vector<float> &resultado);
 int solucao_valida(vector<float> resultado, vector<float> limInf, vector<float> limSup);

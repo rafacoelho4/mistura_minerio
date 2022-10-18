@@ -47,7 +47,7 @@ float LAHC(int pilhas, vector<int> &s, int massa, float *custos, float **concent
     while (r <= m)
     {
         // random neighbor
-        construcao_aleatoria(pilhas, s_viz, massa);
+        construcao_aleatoria(pilhas, s_viz, massa, 500, massa/5);
 
         // funcao objetiva
         fo_viz = calcula_fo(pilhas, s_viz, custos);
