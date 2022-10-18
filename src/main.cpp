@@ -75,15 +75,13 @@ int main()
 
     do
     {
-        // cout << "iteracao: " << it << endl;
-
         // clearing vectors (new solution (s) will be found and new concentration results too (resultado))
         resultado.clear();
         s.clear();
 
         // construcao da solucao inicial
-        construcao_aleatoria(pilhas, s, massa);
-        // construcao_exemplo(pilhas, s);
+        // construcao_aleatoria(pilhas, s, massa);
+        construcao_exemplo(pilhas, s);
 
         // calculando valor da solução atual
         fo = calcula_fo(pilhas, s, custos);
@@ -128,8 +126,8 @@ int main()
     // fo_viz = descidaRandomica(pilhas, s, custos, iterMax, concentracoes, resultado, limInf, limSup, meta, alpha);
     // cout << "Apos descida randomica: ";
 
-    int l = 40, m = 60, alphaLAHC = -50;
-    fo_viz = LAHC(pilhas, s, custos, concentracoes, resultado, limInf, limSup, meta, alphaLAHC, l, m);
+    int l = 30, m = 40, alphaLAHC = -20;
+    fo_viz = LAHC(pilhas, s, massa, custos, concentracoes, resultado, limInf, limSup, meta, alphaLAHC, l, m);
 
     // Solucao apos refinamento
     calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
