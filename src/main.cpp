@@ -5,28 +5,7 @@
 #include "construcao.h"
 #include "busca_local.h"
 #include "lahc.h"
-
-#include <iostream>
-
-/*
-    SOLUÇÃO
-        formato:
-        vetor onde cada posição diz respeito a massa retirada da pilha na posição i do vetor
-        [0 100 300 0 200]
-        massa total: 600
-
-        validação da solução:
-        concentração dos 5 elementos deve estar dentro dos limites
-
-        valor da função objetiva (custo):
-        Si * Pi (quantidade retirada da pilha i vezes o preço do material dessa pilha)
-        0 * p1 + 100 * p2 + 300 * p3 + 0 * p4 + 200 * p5
-*/
-/*
-    PARAMETROS:
-        - M: massa da mistura final em toneladas
-        - m: valor mínimo de retirada de material
-*/
+#include "menu.h"
 
 int main()
 {
@@ -48,7 +27,7 @@ int main()
     // criando vetor de custo
     custos = cria_vetor_float(pilhas);
     // lendo valores dos custos de cada pilha
-    le_arq_vetor((char *)"input/custo.txt", custos);
+    le_arq_vetor((char *)"input/custoigual.txt", custos);
 
     // conentracoes dos elementos em cada pilha
     float **concentracoes;
@@ -88,77 +67,123 @@ int main()
     // seed for random numbers
     srand((unsigned)time(0));
 
+    vector<float> old;
+    float oldfo;
+    float fo_viz;
+    int alpha = 5;
+    int iterMax;
+
+    int escolha = 0;
     do
     {
-        // cout << it << endl;
-        // clearing vectors (new solution (s) will be found and new concentration results too (resultado))
-        resultado.clear();
-        s.clear();
+        escolha = menu_principal();
+        switch (escolha)
+        {
+        case 0:
+            printf("\n\nBye bye!!!\n\n");
+            break;
 
-        // construcao da solucao inicial
-        // construcao_aleatoria(pilhas, s, massa, 100, massa / 10);
-        construcao_exemplo(pilhas, s);
+        case 1:
+            switch (menu_solucao_inicial())
+            {
+            case 1: /* Geracao gulosa */
+                printf("Nao implementado\n");
+                construcao_exemplo(pilhas, s);
+                fo = calcula_fo(pilhas, s, custos);
+                calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
 
-        // calculando valor da solução atual
-        fo = calcula_fo(pilhas, s, custos);
+                printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup));
+                imprime_solucao(pilhas, s);
+                printf("Funcao objetivo = %f\n", fo);
+                imprime_concentracoes(resultado, nomes);
+                cout << "distancia relativa: " << proximo_meta(elementos, resultado, meta, intervalo) << endl;
 
-        // calcula a concentração de cada elemento no produto final
-        calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
+                old = resultado;
+                oldfo = fo;
+                break;
+            case 2: /* Geracao aleatória */
+                printf("\nSolucao construida de forma parcialmente gulosa (Vizinho Mais Proximo):\n");
+                printf("Funcao objetivo = %f\n", fo);
+                do
+                {
+                    // clearing vectors (new solution (s) will be found and new concentration results too (resultado))
+                    resultado.clear();
+                    s.clear();
 
-        // checa se a solução possui valores aceitaveis de concentracoes
-        valido = solucao_valida(resultado, limInf, limSup, s, qtd);
+                    // construcao da solucao inicial
+                    construcao_aleatoria(pilhas, s, massa, 100, massa / 10, qtd);
+                    // construcao_exemplo(pilhas, s);
 
-        // incrementing iteration variable
-        it++;
-    } while (valido == 0 && it < 800);
+                    // calculando valor da solução atual
+                    fo = calcula_fo(pilhas, s, custos);
 
-    valido ? cout << "solucao encontrada!" : cout << "solucao nao encontrada...";
+                    // calcula a concentração de cada elemento no produto final
+                    calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
 
-    if (!valido)
-    {
-        libera_matriz_float(concentracoes, pilhas);
-        return 1;
-    }
+                    // checa se a solução possui valores aceitaveis de concentracoes
+                    valido = solucao_valida(resultado, limInf, limSup);
 
-    // proximity with desired concentration
-    vector<float> prox;
-    // weight for goal proximity
-    int alpha = 5;
+                    // incrementing iteration variable
+                    it++;
+                } while (valido == 0 && it < 800);
 
-    // Solucao antes de refinamento
-    printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup, s, qtd));
-    imprime_solucao(pilhas, s);
-    printf("Funcao objetivo = %f\n", fo);
-    imprime_concentracoes(resultado, nomes);
-    cout << "distancia relativa: " << proximo_meta(elementos, resultado, meta, intervalo) << endl;
+                valido ? cout << "solucao encontrada!" : cout << "solucao nao encontrada...";
 
-    vector<float> old = resultado;
-    float oldfo = fo;
+                if (!valido)
+                {
+                    libera_matriz_float(concentracoes, pilhas);
+                    return 1;
+                }
 
-    float fo_viz;
+                // Solucao antes de refinamento
+                printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup));
+                imprime_solucao(pilhas, s);
+                printf("Funcao objetivo = %f\n", fo);
+                imprime_concentracoes(resultado, nomes);
+                cout << "distancia relativa: " << proximo_meta(elementos, resultado, meta, intervalo) << endl;
 
-    // BEST IMPROVEMENT
-    // fo_viz = best_improvement(pilhas, s, custos, concentracoes, resultado, limInf, limSup, meta, alpha);
-    // cout << "Apos descida best improvement: ";
+                old = resultado;
+                oldfo = fo;
+                break;
+            }
+            break;
+        case 2:
+            // printf("Nao implementado\n");
+            fo_viz = best_improvement(pilhas, s, custos, concentracoes, resultado, limInf, limSup, meta, alpha);
+            cout << "Apos descida best improvement: ";
+            printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup));
+            imprime_solucao(pilhas, s);
+            printf("Funcao objetivo = %f\n", fo);
+            imprime_concentracoes(resultado, nomes);
+            cout << "distancia relativa: " << proximo_meta(elementos, resultado, meta, intervalo) << endl;
+            break;
+        case 3:
+            // printf("Nao implementado\n");
+            iterMax = 600;
+            fo_viz = descidaRandomica(pilhas, s, custos, iterMax, concentracoes, resultado, limInf, limSup, meta, alpha);
+            cout << "Apos descida randomica: ";
+            printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup));
+            imprime_solucao(pilhas, s);
+            printf("Funcao objetivo = %f\n", fo);
+            imprime_concentracoes(resultado, nomes);
+            cout << "distancia relativa: " << proximo_meta(elementos, resultado, meta, intervalo) << endl;
+            break;
+        case 4:
+            // LAHC
+            int l = 40, m = 60, alphaLAHC = 1000;
+            fo_viz = LAHC(pilhas, s, massa, custos, concentracoes, qtd, resultado, limInf, limSup, meta, alphaLAHC, l, m);
+            cout << "Apos LAHC: ";
 
-    // DESCIDA RANDOMICA
-    // int iterMax = 600;
-    // fo_viz = descidaRandomica(pilhas, s, custos, iterMax, concentracoes, resultado, limInf, limSup, meta, alpha);
-    // cout << "Apos descida randomica: ";
-
-    // LAHC
-    int l = 20, m = 30, alphaLAHC = -50;
-    // int l = 40, m = 60, alphaLAHC = -200;
-    fo_viz = LAHC(pilhas, s, massa, custos, concentracoes, qtd, resultado, limInf, limSup, meta, alphaLAHC, l, m);
-    cout << "Apos LAHC: ";
-
-    // Solucao apos refinamento
-    calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
-    printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup, s, qtd));
-    imprime_solucao(pilhas, s);
-    printf("Funcao objetivo = %f\n", fo_viz);
-    imprime_concentracoes(resultado, nomes);
-    cout << "distancia relativa: " << proximo_meta(elementos, resultado, meta, intervalo) << endl;
+            // Solucao apos refinamento
+            calcula_concentracoes(pilhas, s, elementos, concentracoes, resultado);
+            printf("\nSolucao: %d\n", solucao_valida(resultado, limInf, limSup));
+            imprime_solucao(pilhas, s);
+            printf("Funcao objetivo = %f\n", fo_viz);
+            imprime_concentracoes(resultado, nomes);
+            cout << "distancia relativa: " << proximo_meta(elementos, resultado, meta, intervalo) << endl;
+            break;
+        }
+    } while (escolha != 0);
 
     // comparando concentracoes da primeira solucao e a ultima solucao encontrada
     vector<float> novo = resultado;
@@ -194,5 +219,6 @@ int main()
     limpa_arquivo((char *)"output/solucao.txt");
     imprime_s((char *)"output/solucao.txt", pilhas, elementos, s, fo_viz, resultado, nomes, distance);
 
-    return 1;
+    libera_matriz_float(concentracoes, pilhas);
+    return 0;
 }

@@ -4,7 +4,7 @@ EXT = cpp
 # Flags #
 CFLAGS = -Wall -g
 # Object Files #
-OBJECTS = ./bin/file.o ./bin/construcao.o ./bin/busca_local.o ./bin/lahc.o ./bin/util.o
+OBJECTS = ./bin/file.o ./bin/construcao.o ./bin/busca_local.o ./bin/lahc.o ./bin/util.o ./bin/menu.o 
 # Executable # 
 EXE = test
 # Source directory #
@@ -20,6 +20,9 @@ $(BIN_DIR)/main.o: $(SRC_DIR)/main.$(EXT)
 	$(CC) -c $(SRC_DIR)/main.$(EXT) -o $(BIN_DIR)/main.o
 
 # SRC
+./bin/util.o: $(SRC_DIR)/util.$(EXT)
+	$(CC) -c $(SRC_DIR)/util.$(EXT) -o $(BIN_DIR)/util.o
+
 $(BIN_DIR)/file.o: $(SRC_DIR)/file.$(EXT)
 	$(CC) -c $(SRC_DIR)/file.$(EXT) -o $(BIN_DIR)/file.o
 
@@ -31,9 +34,10 @@ $(BIN_DIR)/busca_local.o: $(SRC_DIR)/busca_local.$(EXT)
 
 $(BIN_DIR)/lahc.o: $(SRC_DIR)/lahc.$(EXT)
 	$(CC) -c $(SRC_DIR)/lahc.$(EXT) -o $(BIN_DIR)/lahc.o
-	
-./bin/util.o: $(SRC_DIR)/util.$(EXT)
-	$(CC) -c $(SRC_DIR)/util.$(EXT) -o $(BIN_DIR)/util.o
+
+$(BIN_DIR)/menu.o: $(SRC_DIR)/menu.$(EXT)
+	$(CC) -c $(SRC_DIR)/menu.$(EXT) -o $(BIN_DIR)/menu.o
+
 
 # DELETE/CLEAN
 .PHONY : clean remove info

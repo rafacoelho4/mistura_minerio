@@ -5,6 +5,7 @@
 #include "util.h"
 #include "file.h"
 #include "construcao.h"
+#include "busca_local.h"
 
 // l: tamanho do vetor de soluções F
 // m: máximo de rejeições seguidas

@@ -9,6 +9,8 @@ float LAHC(int pilhas, vector<int> &s, int massa, float *custos, float **concent
     // posição p começa no 0 assim como iterador r
     int r = 0, p = 0, valido;
 
+    int chosen_i, chosen_j, chosen_qtd;
+
     vector<float> intervalo;
     for (int i = 0; i < limInf.size(); i++)
         intervalo.push_back(limSup[i] - limInf[i]);
@@ -20,7 +22,11 @@ float LAHC(int pilhas, vector<int> &s, int massa, float *custos, float **concent
     fo = calcula_fo(pilhas, s, custos);
     // distance to desired concentration for all elements
     distance = proximo_meta(resultado.size(), resultado, meta, intervalo);
-    // não adicionando multiplicador alpha na primeira iteração
+    // cout << "Inicio do LAHC" << endl;
+    // cout << "distancia: " << distance << " e alpha " << alpha << " = " << distance * alpha << endl;
+    distance *= alpha;
+
+    // cout << "fo: " << fo << " + " << distance << " = " << fo + distance << endl;
 
     fo += distance;
 
@@ -42,14 +48,18 @@ float LAHC(int pilhas, vector<int> &s, int massa, float *custos, float **concent
     imprime_fo((char *)"output/lahc.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, r, distance / alpha);
 
     // melhor solução ate agora é a inicial
-    s_star = s;
+    s_star = s_viz = s;
     int it = 0;
 
     // while (r <= m && it < 10000)
     while (r <= m)
     {
-        // random neighbor
-        construcao_aleatoria(pilhas, s_viz, massa, 100, massa / 10);
+        // gerar vizinho aleatório
+        get_random_neighbor(pilhas, s, custos, qtd, &chosen_i, &chosen_j, &chosen_qtd);
+
+        s_viz = s;
+        s_viz[chosen_i] -= chosen_qtd;
+        s_viz[chosen_j] += chosen_qtd;
 
         // funcao objetiva
         fo_viz = calcula_fo(pilhas, s_viz, custos);
@@ -58,9 +68,8 @@ float LAHC(int pilhas, vector<int> &s, int massa, float *custos, float **concent
         calcula_concentracoes(pilhas, s_viz, resultado.size(), concentracoes, resultado);
 
         // checa se a solução possui valores aceitaveis de concentracoes
-        valido = solucao_valida(resultado, limInf, limSup, s, qtd);
+        valido = solucao_valida(resultado, limInf, limSup);
 
-        // cout << it << endl;
         it++;
 
         // só trabalhando com soluções com concentrações aceitaveis
@@ -69,12 +78,14 @@ float LAHC(int pilhas, vector<int> &s, int massa, float *custos, float **concent
 
         // calculando distancia da solução atual ate a meta estabelecida
         distance = proximo_meta(resultado.size(), resultado, meta, intervalo);
+        distance *= alpha;
 
         fo_viz += distance;
 
         // solução vizinha precisa ser melhor que a solução corrente ou que a solução na posição p de F
         if ((fo_viz <= fo) || (fo_viz <= F[p]))
         {
+            // cout << fo_viz << " melhor que " << fo << " ou " << F[p] << endl;
             // se houver melhora, reiniciar iterador
             if (fo_viz < fo)
                 r = it = 0;
@@ -95,6 +106,7 @@ float LAHC(int pilhas, vector<int> &s, int massa, float *custos, float **concent
         // incremento
         r++;
 
+        fim_CPU = clock();
         imprime_fo((char *)"output/lahc.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, r, distance / alpha);
     }
 

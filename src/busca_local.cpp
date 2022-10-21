@@ -1,5 +1,30 @@
 #include "busca_local.h"
 
+void get_random_neighbor(int pilhas, vector<int> s, float *custos, vector<int> qtd, int *chosen_i, int *chosen_j, int *chosen_qtd)
+{
+    int i, j, quantity, offset = 100, range = 200;
+    bool valido;
+    do
+    {
+        valido = true;
+
+        quantity = offset + (rand() % range);
+        quantity -= quantity % UNIDADE;
+
+        i = rand() % pilhas;
+        do
+            j = rand() % pilhas;
+        while (i == j);
+
+        if ((s[j] + quantity > qtd[j]) || (s[i] - quantity < 0))
+            valido = false;
+    } while (!valido);
+
+    *chosen_i = i;
+    *chosen_j = j;
+    *chosen_qtd = quantity;
+}
+
 float vizinho_aleatorio(int n, vector<int> &s, float *custos)
 {
     float fo;
@@ -76,7 +101,7 @@ float descidaRandomica(int n, vector<int> &s, float *custos, int iterMax, float 
         distance *= alpha;
 
         // checa se a solução possui valores aceitaveis de concentracoes
-        // valido = solucao_valida(resultado, limInf, limSup);
+        valido = solucao_valida(resultado, limInf, limSup);
 
         // we want to reach the concentration goal values
         fo_viz += distance;
@@ -87,7 +112,7 @@ float descidaRandomica(int n, vector<int> &s, float *custos, int iterMax, float 
         // if neighbor is better
         if (fo_viz < fo)
         {
-            // cout << "fo sera: " << fo_viz - distance << " + " << distance << " = " << fo_viz << endl;
+            cout << "fo sera: " << fo_viz - distance << " + " << distance << " = " << fo_viz << endl;
             s = s_viz;
             fo = fo_viz;
             fim_CPU = clock();
@@ -202,7 +227,7 @@ float best_improvement(int n, vector<int> &s, float *custos, float **concentraco
         distance *= alpha;
 
         // checa se a solução possui valores aceitaveis de concentracoes
-        // valido = solucao_valida(resultado, limInf, limSup);
+        valido = solucao_valida(resultado, limInf, limSup);
 
         // desfazendo movimentação
         s_viz[melhor_i] += melhor_qtd;

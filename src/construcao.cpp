@@ -27,7 +27,7 @@ void construcao_exemplo(int n, vector<int> &s)
     s.push_back(1120);
 }
 
-void construcao_aleatoria(int n, vector<int> &s, int massa, int offset, int range)
+void construcao_aleatoria(int n, vector<int> &s, int massa, int offset, int range, vector<int> qtd)
 {
     s.clear();
     // initial state with zero
@@ -46,8 +46,9 @@ void construcao_aleatoria(int n, vector<int> &s, int massa, int offset, int rang
         random = offset + (rand() % range);
         // sem valores quebrados, apenas multiplos de 10
         random -= random % UNIDADE;
-        // if (s[pos] != 0)
-        //     continue;
+        // nao ultrapassando a quantidade disponivel da pilha
+        if (s[pos] + random > qtd[pos])
+            continue;
         // se soma ultrapassa o máximo, pegar o resto até o desejado
         if (sum + random > massa)
         {
@@ -93,12 +94,8 @@ void calcula_concentracoes(int pilhas, vector<int> &s, int m, float **concentrac
         resultado.push_back(sumElementos[i] / massatotal);
 }
 
-int solucao_valida(vector<float> resultado, vector<float> limInf, vector<float> limSup, vector<int> s, vector<int> qtd)
+int solucao_valida(vector<float> resultado, vector<float> limInf, vector<float> limSup)
 {
-    // for (int i = 0; i < qtd.size(); i++)
-    //     if (s[i] > qtd[i])
-    //         return 0;
-
     for (int i = 0; i < resultado.size(); i++)
     {
         if (((resultado[i] * 100) >= limInf[i]) && ((resultado[i] * 100) <= limSup[i]))
@@ -106,9 +103,7 @@ int solucao_valida(vector<float> resultado, vector<float> limInf, vector<float> 
         else
             return 0;
     }
-
-    cout << "*";
-
+    // cout << "*";
     return 1;
 }
 
